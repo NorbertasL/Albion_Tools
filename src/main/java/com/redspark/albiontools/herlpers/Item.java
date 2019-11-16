@@ -4,12 +4,33 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-//Class to contain item data
+/**
+ * Class that encapsulates item data including market data
+ */
 
 public class Item {
+
+    private String name, id, location;
+    private QUALITY quality;
+    private int sell, buy, enchant;
+    private LocalDateTime sellDate, buyDate;
+
+    private long lastSellUpdate, lastBuyUpdate;
+
+    public Item(String name) {
+        this.name = name;
+    }
+
+    public Item(String name, String id, int enchant) {
+        this.name = name;
+        this.id = id;
+        this.enchant = enchant;
+    }
+
     public String getName() {
         return name;
     }
+
     public String getId() {
         return id;
     }
@@ -26,12 +47,12 @@ public class Item {
         this.location = location;
     }
 
-    public String getQuality() {
-        return Objects.requireNonNullElse(quality, "UNKNOWN");
+    public QUALITY getQuality() {
+        return Objects.requireNonNullElse(quality, QUALITY.UNKNOWN);
     }
 
     public void setQuality(QUALITY quality) {
-        this.quality = quality.name();
+        this.quality = quality;
     }
 
     public int getSell() {
@@ -58,8 +79,6 @@ public class Item {
         this.enchant = enchant;
     }
 
-
-
     public LocalDateTime getSellDate() {
         return sellDate;
     }
@@ -77,23 +96,8 @@ public class Item {
         this.buyDate = buyDate;
         lastBuyUpdate = Duration.between(buyDate, LocalDateTime.now()).toMinutes();
     }
-    private String name, id, location, quality;
-    private int sell, buy, enchant;
-    private LocalDateTime sellDate, buyDate;
 
-    private long lastSellUpdate, lastBuyUpdate;
-
-    public Item(String name){
-        this.name = name;
-    }
-    public Item (String name, String id, int enchant){
-        this.name = name;
-        this.id = id;
-        this.enchant = enchant;
-    }
-
-    public enum QUALITY{
-        ALL(-1),
+    public enum QUALITY {
         UNKNOWN(0),
         Normal(1),
         Good(2),
@@ -102,38 +106,43 @@ public class Item {
         Masterpiece(5);
 
         private int qualityIndex;
-        QUALITY(int qualityIndex){
+
+        QUALITY(int qualityIndex) {
             this.qualityIndex = qualityIndex;
         }
-        public static String getString(int qualityIndex){
-            for(QUALITY q: values()){
-                if(q.qualityIndex == qualityIndex){
+
+        public static String getString(int qualityIndex) {
+            for (QUALITY q : values()) {
+                if (q.qualityIndex == qualityIndex) {
                     return q.toString();
                 }
             }
             return null;
         }
-        public int getQualityIndex(){
+
+        public int getQualityIndex() {
             return qualityIndex;
         }
-        public static QUALITY findQuality(int qualityIndex){
-            for(QUALITY q: values()){
-                if(q.qualityIndex == qualityIndex){
+
+        public static QUALITY findQuality(int qualityIndex) {
+            for (QUALITY q : values()) {
+                if (q.qualityIndex == qualityIndex) {
                     return q;
                 }
             }
             return null;
         }
     }
-    public String getBasicData(){
+
+    public String getBasicData() {
         String s = "";
         //s+=name;
-        s+="Q:"+quality;
-        s+=" E:"+enchant;
-        s+=" Sell:"+sell;
-        s+= " Updated "+lastSellUpdate+" min ago, ";
-        s+=" Buy:"+ buy;
-        s+= " Updated "+lastBuyUpdate+" min ago, ";
+        s += "Q:" + quality.toString();
+        s += " E:" + enchant;
+        s += " Sell:" + sell;
+        s += " Updated " + lastSellUpdate + " min ago, ";
+        s += " Buy:" + buy;
+        s += " Updated " + lastBuyUpdate + " min ago, ";
         return s;
     }
 
