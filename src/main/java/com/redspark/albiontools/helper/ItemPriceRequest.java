@@ -5,6 +5,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import com.redspark.albiontools.Constants.LOCATION;
+import com.redspark.albiontools.Constants.QUALITY;
+
+
+
 /**
  * Class that does a asynchronous price request for an item
  * After it receives the data it does a callback to the caller class with the json response
@@ -16,7 +21,7 @@ public class ItemPriceRequest {
 
     //Default search values are pre-set.
     private LOCATION location = LOCATION.Caerleon;
-    private Item.QUALITY quality = Item.QUALITY.UNKNOWN;
+    private QUALITY quality = QUALITY.UNKNOWN;
     private int enchant = 0;
 
 
@@ -53,7 +58,7 @@ public class ItemPriceRequest {
         }
         uri.append(locationTag).append(location.getLocationString());
         uri.append(qualityTag);
-        if (quality != Item.QUALITY.UNKNOWN) {
+        if (quality != QUALITY.UNKNOWN) {
             uri.append(quality.getQualityIndex());
         }
         URI returnURI = URI.create(uri.toString());
@@ -70,24 +75,6 @@ public class ItemPriceRequest {
     }
 
 
-    //Enum of supported locations
-    public enum LOCATION {
-        Caerleon("Caerleon"),
-        Thetford("Thetford"),
-        Lymhurst("Lymhurst"),
-        Bridgewatch("Bridgewatch"),
-        Martlock("Martlock");
-
-        private String string;
-
-        LOCATION(String string) {
-            this.string = string;
-        }
-
-        public String getLocationString() {
-            return string;
-        }
-    }
 
 
 }

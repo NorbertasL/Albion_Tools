@@ -1,9 +1,10 @@
 package com.redspark.albiontools.farmer;
 
+import com.redspark.albiontools.helper.Item;
+
 public class Crop {
-    private String name,seedName;
-    private int price,SeedPrice;
-    public Crop(String name, String seedName){
+    private Item name,seedName;
+    public Crop(Item crop, Item seed){
         this.name = name;
         this.seedName = seedName;
     }

@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import com.redspark.albiontools.Constants.QUALITY;
+
 /**
  * Class that encapsulates item data including market data
  */
@@ -97,42 +99,6 @@ public class Item {
         lastBuyUpdate = Duration.between(buyDate, LocalDateTime.now()).toMinutes();
     }
 
-    public enum QUALITY {
-        UNKNOWN(0),
-        Normal(1),
-        Good(2),
-        Outstanding(3),
-        Excellent(4),
-        Masterpiece(5);
-
-        private int qualityIndex;
-
-        QUALITY(int qualityIndex) {
-            this.qualityIndex = qualityIndex;
-        }
-
-        public static String getString(int qualityIndex) {
-            for (QUALITY q : values()) {
-                if (q.qualityIndex == qualityIndex) {
-                    return q.toString();
-                }
-            }
-            return null;
-        }
-
-        public int getQualityIndex() {
-            return qualityIndex;
-        }
-
-        public static QUALITY findQuality(int qualityIndex) {
-            for (QUALITY q : values()) {
-                if (q.qualityIndex == qualityIndex) {
-                    return q;
-                }
-            }
-            return null;
-        }
-    }
 
     public String getBasicData() {
         String s = "";
