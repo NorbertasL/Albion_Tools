@@ -76,6 +76,11 @@ public class ItemPricer implements ItemRequestCallback {
                         break;
 
                     case "-set":
+                        String splitInput[] = input.split(" ");
+                        if(splitInput.length < 2){
+                            System.out.println("Missing parameter");
+                            break;
+                        }
                         switch (input.split(" ")[1]){
                             case "loc":
                                 setLocation();
