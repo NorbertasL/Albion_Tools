@@ -12,7 +12,7 @@ public class ItemPriceRequest {
 
     //Default search values are pre-set.
     private LOCATION location = LOCATION.Caerleon;
-    private Item.QUALITY quality = Item.QUALITY.ALL;
+    private Item.QUALITY quality = Item.QUALITY.UNKNOWN;
     private int enchant= 0;
 
 
@@ -55,7 +55,7 @@ public class ItemPriceRequest {
         }
         uri+=locationTag+location.getLocationString();
         uri+=qualityTag;
-        if(quality != Item.QUALITY.ALL){
+        if(quality != Item.QUALITY.UNKNOWN){
             uri+=quality.getQualityIndex();
         }
         URI returnURI = URI.create(uri);
