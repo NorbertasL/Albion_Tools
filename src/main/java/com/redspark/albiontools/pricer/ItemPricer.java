@@ -5,15 +5,15 @@ import com.redspark.albiontools.helper.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Scanner;
 
 public class ItemPricer implements ItemRequestCallback {
-    private Scanner scanner;
+    private BufferedReader bufferedReader;
     private ItemPriceRequest priceRequestClass;
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -33,12 +33,13 @@ public class ItemPricer implements ItemRequestCallback {
 
     private List<Item> itemList = new ArrayList<>();
 
-    public ItemPricer(Scanner scanner){
+    public ItemPricer(BufferedReader bufferedReader){
 
         priceRequestClass = new ItemPriceRequest(this);
         ImageScanner imageScanner = new ImageScanner();
 
-        this.scanner = scanner;
+        //this.bufferedReader = bufferedReader;
+        this.bufferedReader = bufferedReader;
         System.out.println("Welcome to ItemPricer");
         System.out.println("For a list of commands type -h or help");
         System.out.println("To go back use -b or -back");
@@ -46,10 +47,15 @@ public class ItemPricer implements ItemRequestCallback {
 
         //User cmd interface loop
         boolean run = true;
+        String input;
         while(run){
-            System.out.println("Select option");
-            scanner.reset();
-            String input = scanner.nextLine();
+            try{
+                input = this.bufferedReader.readLine();
+            }catch (Exception e){
+                System.out.println("Bad input");
+                e.printStackTrace();
+                continue;
+            }
             if(input.length() == 0 || (input.length() ==2 && input.charAt(0)=='@')){
                 System.out.println("Scanning screen for item");
                 String item = imageScanner.getTitle();
@@ -90,6 +96,7 @@ public class ItemPricer implements ItemRequestCallback {
                                 break;
                             default:
                                 System.out.println("Unknown parameter:"+input.split(" ")[1]);
+                                break;
                         }
                         break;
 
@@ -98,6 +105,7 @@ public class ItemPricer implements ItemRequestCallback {
                         System.out.println("Unknown command");
                         System.out.println("Use -h or -help for a list of commands");
                         System.out.println("Use -e or -exit to exit");
+                        break;
                 }
 
             //Normal input
@@ -126,8 +134,8 @@ public class ItemPricer implements ItemRequestCallback {
 
         int choice;
         try {
-            choice = scanner.nextInt();
-        }catch (InputMismatchException e){
+            choice = Integer.parseInt(bufferedReader.readLine());
+        }catch (Exception e){
             System.out.println("Bad input");
             setLocation();
             return;

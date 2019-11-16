@@ -3,6 +3,9 @@ package com.redspark.albiontools;
 import com.redspark.albiontools.helper.IdReader;
 import com.redspark.albiontools.pricer.ItemPricer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class AlbionTools {
@@ -16,7 +19,7 @@ public class AlbionTools {
         System.out.println("Done");
 
 
-        Scanner scanner = new Scanner(System.in);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
         System.out.println("Welcome to Albion Tools by Red_Spark");
         System.out.println("Pick a tool you would like to use:");
@@ -34,7 +37,13 @@ public class AlbionTools {
 //            imageScanner.getSlot();
 //            System.out.println("Done");
 
-            input = scanner.nextLine();
+            try{
+                input = bufferedReader.readLine();
+            }catch (IOException e){
+                e.printStackTrace();
+                continue;
+            }
+
 
             if(input.length() == 0){
 
@@ -60,7 +69,7 @@ public class AlbionTools {
             }else {
                 switch(input){
                     case "1":
-                        new ItemPricer(scanner);
+                        new ItemPricer(bufferedReader);
                         break;
 
                     case "2":
