@@ -12,8 +12,7 @@ import java.net.http.HttpResponse;
 
 public class ItemPriceRequest {
 
-
-    ItemRequestCallback callerClass;
+    private ItemRequestCallback callerClass;
 
     //Default search values are pre-set.
     private LOCATION location = LOCATION.Caerleon;
@@ -22,12 +21,7 @@ public class ItemPriceRequest {
 
 
     public ItemPriceRequest(ItemRequestCallback callerClass) {
-        if (!(callerClass instanceof ItemRequestCallback)) {
-            DebugLog.printError(this, "Class " + callerClass.toString()
-                    + " does not implement ItemRequestCallback");
-        } else {
-            this.callerClass = callerClass;
-        }
+        this.callerClass = callerClass;
     }
 
     public void sendRequest(String itemID, int enchant) {
@@ -42,28 +36,27 @@ public class ItemPriceRequest {
                 .join();
     }
 
-    private final String baseURL = "https://www.albion-online-data.com/api/v2/stats/";
-    private final String requestType = "prices/";
-    private final String enchantTag = "@";
-    private final String locationTag = "?locations=";
-    private final String qualityTag = "&qualities=";
-
     //Builds URI based on the pre-defined settings
     private URI buildUri(String itemID) {
-        String uri = baseURL;
-        uri += requestType;
+        final String baseURL = "https://www.albion-online-data.com/api/v2/stats/";
+        final String requestType = "prices/";
+        final String enchantTag = "@";
+        final String locationTag = "?locations=";
+        final String qualityTag = "&qualities=";
 
-        uri += itemID;
+        StringBuilder uri = new StringBuilder(baseURL);
+        uri.append(requestType);
+        uri.append(itemID);
 
         if (enchant != 0) {
-            uri += enchantTag + enchant;
+            uri.append(enchantTag).append(enchant);
         }
-        uri += locationTag + location.getLocationString();
-        uri += qualityTag;
+        uri.append(locationTag).append(location.getLocationString());
+        uri.append(qualityTag);
         if (quality != Item.QUALITY.UNKNOWN) {
-            uri += quality.getQualityIndex();
+            uri.append(quality.getQualityIndex());
         }
-        URI returnURI = URI.create(uri);
+        URI returnURI = URI.create(uri.toString());
         System.out.println("URI:" + returnURI);
         return returnURI;
     }
