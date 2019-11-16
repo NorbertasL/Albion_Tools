@@ -5,24 +5,26 @@ package com.redspark.albiontools.helper;
  */
 
 public class DebugLog {
-    private static DEBUG_LEVEL debugLevel = DEBUG_LEVEL.ALL;
+    private static DEBUG_LEVEL locDebugLevel = DEBUG_LEVEL.ALL;
 
-    public static void printError(Object callerClass, String message){
+    static void printError(Object callerClass, String message){
         String tag = "ERROR from ";
-        if(debugLevel==DEBUG_LEVEL.ALL || debugLevel == DEBUG_LEVEL.ERROR){
+        if(locDebugLevel==DEBUG_LEVEL.ALL || locDebugLevel == DEBUG_LEVEL.ERROR){
            System.out.println(tag+callerClass.getClass()+" :"+message);
         }
     }
 
+    @SuppressWarnings("unused")
     public static void setDebugLevel(DEBUG_LEVEL debugLevel){
-        debugLevel = debugLevel;
+        locDebugLevel = debugLevel;
     }
 
     //Enum of debug levels
-    enum DEBUG_LEVEL{
+    @SuppressWarnings("unused ")
+    enum DEBUG_LEVEL {
         ALL,
+        ERROR,
         OFF,
         WARNING,
-        ERROR,
     }
 }
