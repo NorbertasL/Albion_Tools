@@ -1,4 +1,4 @@
-package com.redspark.albiontools.herlpers;
+package com.redspark.albiontools.helper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,46 +12,51 @@ import java.net.http.HttpResponse;
 import java.util.*;
 
 
-
 public class IdReader {
-    private static final String path = "src/com/redspark/albiontools/data/itemList.json";
+    private final static String ITEM_ID_URI = "https://raw.githubusercontent.com/broderickhyman/ao-bin-dumps/master/formatted/items.json";
 
+    //Using HasMap for easy storage and to avoid duplicates
     private static HashMap<String, String> itemsHashMap;
 
-    public static void request(){
+    public static void request() {
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://raw.githubusercontent.com/broderickhyman/ao-bin-dumps/master/formatted/items.json")).build();
+
+        //Asynchronous HTTP request
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(ITEM_ID_URI)).build();
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
                 .thenApply(IdReader::parsData)
                 .join();
     }
 
-    private static Boolean parsData(String data){
-        try{
+    private static Boolean parsData(String data) {
+        try {
             JSONArray items = new JSONArray(data);
+
             HashMap<String, String> temp = new HashMap<>();
-            for(int i = 0; i < items.length(); i++){
+
+            //Looping trough the json and extracting ItemNames and ItemIDs
+            for (int i = 0; i < items.length(); i++) {
                 JSONObject item = items.getJSONObject(i);
                 JSONObject localizedNames;
-                try{
+                try {
                     localizedNames = item.getJSONObject("LocalizedNames");
-                }catch (Exception e){
-                    System.out.println("LocalizedDescriptions is null for:"+item.getString("UniqueName"));
+                } catch (Exception e) {
+                    System.out.println("LocalizedDescriptions is null for:" + item.getString("UniqueName"));
                     continue;
                 }
-                //String localizedNames = (String)item.get("LocalizedNames");
-                //System.out.println(localizedNames);
 
-                //System.out.println("Name:"+name.getString("EN-US"));
+                //Using only english names for now
                 String name = localizedNames.getString("EN-US");
+
+                //@Stuff after @ in the String is the enchant level
+                //I don't want it in my item list, because i can add than manually when I need it.
                 String id = item.getString("UniqueName").split("@")[0];
-                //System.out.println("ID:"+id +"    Name:"+name);
 
                 temp.put(name.toUpperCase(), id);
             }
             itemsHashMap = temp;
-        }catch (JSONException e){
+        } catch (JSONException e) {
             System.out.println("Load failed...");
             System.out.println(data);
             System.out.println(e);
@@ -59,19 +64,18 @@ public class IdReader {
         }
 
 
-
         return true;
     }
 
-    public static void printList(){
-        itemsHashMap.entrySet().forEach(entry->{
-            System.out.println(entry.getKey()+ " : "+entry.getValue());
+    public static void printList() {
+        itemsHashMap.entrySet().forEach(entry -> {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
         });
-        System.out.println("HashSet list lenght:" +itemsHashMap.size());
+        System.out.println("HashSet list length:" + itemsHashMap.size());
     }
 
-
-    public static String getItemID(String name){
+    //Returns item ID based on the ItemName
+    public static String getItemID(String name) {
         return itemsHashMap.get(name);
     }
 }

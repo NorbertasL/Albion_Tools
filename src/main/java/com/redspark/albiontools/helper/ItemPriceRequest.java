@@ -1,4 +1,4 @@
-package com.redspark.albiontools.herlpers;
+package com.redspark.albiontools.helper;
 
 import java.net.URI;
 import java.net.http.HttpClient;

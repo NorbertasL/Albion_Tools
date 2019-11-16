@@ -1,4 +1,4 @@
-package com.redspark.albiontools.herlpers;
+package com.redspark.albiontools.helper;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

@@ -1,9 +1,7 @@
 package com.redspark.albiontools;
 
-import com.redspark.albiontools.herlpers.IdReader;
-import com.redspark.albiontools.pricer.ImageScanner;
+import com.redspark.albiontools.helper.IdReader;
 import com.redspark.albiontools.pricer.ItemPricer;
-import net.sourceforge.tess4j.Tesseract;
 
 import java.util.Scanner;
 
