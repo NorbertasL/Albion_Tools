@@ -133,7 +133,7 @@ public class ItemPricer implements ItemRequestCallback {
             return;
         }
 
-        if(choice -1 > ItemPriceRequest.LOCATION.values().length){
+        if(choice > ItemPriceRequest.LOCATION.values().length || choice <=0){
             System.out.println("Bad index");
             setLocation();
             return;
