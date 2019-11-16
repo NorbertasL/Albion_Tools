@@ -76,6 +76,6 @@ public class IdReader {
 
     //Returns item ID based on the ItemName
     public static String getItemID(String name) {
-        return itemsHashMap.get(name.toUpperCase());
+        return itemsHashMap.get(name.toLowerCase());
     }
 }
