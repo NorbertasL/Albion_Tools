@@ -8,40 +8,35 @@ import org.json.JSONObject;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class ItemPricer implements ItemRequestCallback {
-    private boolean run = true;
-    private String input;
     private Scanner scanner;
     private ItemPriceRequest priceRequestClass;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final String QUALITY_KEY = "quality";
+    @SuppressWarnings("FieldCanBeLocal")
     private final String SELL_KEY = "sell_price_min";
+    @SuppressWarnings("FieldCanBeLocal")
     private final String BUY_KEY = "buy_price_max";
+    @SuppressWarnings("FieldCanBeLocal")
     private final String SELL_DATE_KEY = "sell_price_min_date";
+    @SuppressWarnings("FieldCanBeLocal")
     private final String BUY_DATE_KEY = "buy_price_max_date";
+    @SuppressWarnings("FieldCanBeLocal")
     private final String LOCATION_KEY = "city";
 
     private Item currentWorkingItem;
 
-//    private Item currentItemNormal;
-//    private Item currentItemGood;
-//    private Item currentItemOutstanding;
-//    private Item currentItemExcellent;
-//    private Item currentItemMasterpiece;
-
     private List<Item> itemList = new ArrayList<>();
-
-    private ImageScanner imageScanner;
-
-
 
     public ItemPricer(Scanner scanner){
 
         priceRequestClass = new ItemPriceRequest(this);
-        imageScanner = new ImageScanner();
+        ImageScanner imageScanner = new ImageScanner();
 
         this.scanner = scanner;
         System.out.println("Welcome to ItemPricer");
@@ -49,23 +44,23 @@ public class ItemPricer implements ItemRequestCallback {
         System.out.println("To go back use -b or -back");
         System.out.println("To close application use -e or -exit");
 
+        //User cmd interface loop
+        boolean run = true;
         while(run){
             System.out.println("Select option");
             scanner.reset();
-            input = scanner.nextLine();
-            if(input.length() == 0 || (input.length() ==2 &&input.charAt(0)=='@')){
+            String input = scanner.nextLine();
+            if(input.length() == 0 || (input.length() ==2 && input.charAt(0)=='@')){
                 System.out.println("Scanning screen for item");
                 String item = imageScanner.getTitle();
                 if(item.equalsIgnoreCase("none")){
                     System.out.println("No Item Found!");
                 }else {
-                    System.out.println("User input was:"+input);
-                    int ench = input.length()>1 ? Integer.parseInt(""+input.charAt(1)) : 0;
+                    int ench = input.length()>1 ? Integer.parseInt(""+ input.charAt(1)) : 0;
                     System.out.println("Item Found:"+item + " @"+ ench);
                     getPrice(item, ench);
 
                 }
-                continue;
 
             //command inputs start with '-'
             }else if(input.charAt(0)=='-'){
@@ -85,6 +80,11 @@ public class ItemPricer implements ItemRequestCallback {
                             case "loc":
                                 setLocation();
                                 break;
+                            case "ench":
+                                //TODO setup a default enchant level
+                                break;
+                            default:
+                                System.out.println("Unknown parameter:"+input.split(" ")[1]);
                         }
                         break;
 
@@ -108,57 +108,46 @@ public class ItemPricer implements ItemRequestCallback {
 
         }
 
-        System.out.println("Thank you for using Item Pricer");
+        System.out.println("Thank you for using ItemPricer");
 
     }
     private void setLocation(){
+
         System.out.println("Location choices are:");
-        System.out.println("1 : Caerleon");
-        System.out.println("2 : Thetford");
-        System.out.println("3 : Lymhurst");
-        System.out.println("4 : Bridgewatch");
-        System.out.println("5 : Martlock");
-
-        int choice = scanner.nextInt();
-
-        switch (choice){
-            case 1:
-                priceRequestClass.setLocation(ItemPriceRequest.LOCATION.Caerleon);
-                break;
-            case 2:
-                priceRequestClass.setLocation(ItemPriceRequest.LOCATION.Thetford);
-                break;
-            case 3:
-                priceRequestClass.setLocation(ItemPriceRequest.LOCATION.Lymhurst);
-                break;
-            case 4:
-                priceRequestClass.setLocation(ItemPriceRequest.LOCATION.Bridgewatch);
-                break;
-            case 5:
-                priceRequestClass.setLocation(ItemPriceRequest.LOCATION.Martlock);
-                break;
-            default:
-            System.out.println("Unknown location");
+        int index = 1;
+        for(ItemPriceRequest.LOCATION loc : ItemPriceRequest.LOCATION.values()){
+            System.out.println(index++ + " : "+ loc);
         }
+
+        int choice;
+        try {
+            choice = scanner.nextInt();
+        }catch (InputMismatchException e){
+            System.out.println("Bad input");
+            setLocation();
+            return;
+        }
+
+        if(choice -1 > ItemPriceRequest.LOCATION.values().length){
+            System.out.println("Bad index");
+            setLocation();
+            return;
+        }else{
+            priceRequestClass.setLocation(ItemPriceRequest.LOCATION.values()[choice-1]);
+        }
+
         System.out.println("Location set to "+ priceRequestClass.getLocation().getLocationString());
 
     }
     private void getPrice(String itemName, int enchant){
         String id = getID(itemName);
-//        currentItemNormal = new Item(itemName, id, enchant);
-//        currentItemGood = new Item(itemName, id, enchant);
-//        currentItemOutstanding = new Item(itemName, id, enchant);
-//        currentItemExcellent = new Item(itemName, id, enchant);
-//        currentItemMasterpiece = new Item(itemName, id, enchant);
 
         currentWorkingItem = new Item("itemName",id,  enchant);
-
-
-
         priceRequestClass.sendRequest(id, enchant);
     }
     private String getID(String itemName){
-        return IdReader.getItemID(itemName.toUpperCase());
+
+        return IdReader.getItemID(itemName);
     }
 
     private void formatJson(String json){
