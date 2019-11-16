@@ -53,13 +53,13 @@ public class IdReader {
                 //I don't want it in my item list, because i can add than manually when I need it.
                 String id = item.getString("UniqueName").split("@")[0];
 
-                temp.put(name.toUpperCase(), id);
+                temp.put(name.toLowerCase(), id);
             }
             itemsHashMap = temp;
         } catch (JSONException e) {
             System.out.println("Load failed...");
             System.out.println(data);
-            System.out.println(e);
+            e.printStackTrace();
             return false;
         }
 
@@ -67,15 +67,15 @@ public class IdReader {
         return true;
     }
 
-    public static void printList() {
-        itemsHashMap.entrySet().forEach(entry -> {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        });
+    //printList methods is used for debugging
+    @SuppressWarnings("unused")
+    private static void printList() {
+        itemsHashMap.forEach((key, value) -> System.out.println(key + " : " + value));
         System.out.println("HashSet list length:" + itemsHashMap.size());
     }
 
     //Returns item ID based on the ItemName
     public static String getItemID(String name) {
-        return itemsHashMap.get(name);
+        return itemsHashMap.get(name.toUpperCase());
     }
 }
