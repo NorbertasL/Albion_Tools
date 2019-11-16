@@ -2,6 +2,8 @@ package com.redspark.albiontools.pricer;
 
 import com.redspark.albiontools.AlbionTools;
 import com.redspark.albiontools.helper.*;
+import com.redspark.albiontools.helper.Interfaces.ItemRequestCallback;
+import com.redspark.albiontools.helper.Interfaces.PriceCallback;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,9 +13,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.redspark.albiontools.Constants.LOCATION;
+import com.redspark.albiontools.Constants.QUALITY;
+
 public class ItemPricer implements ItemRequestCallback {
     private BufferedReader bufferedReader;
     private ItemPriceRequest priceRequestClass;
+
+    private PriceCallback callback;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final String QUALITY_KEY = "quality";
@@ -31,6 +38,10 @@ public class ItemPricer implements ItemRequestCallback {
     private Item currentWorkingItem;
 
     private List<Item> itemList = new ArrayList<>();
+
+    public ItemPricer(){
+        priceRequestClass = new ItemPriceRequest(this);
+    }
 
     public ItemPricer(BufferedReader bufferedReader){
 
@@ -127,7 +138,7 @@ public class ItemPricer implements ItemRequestCallback {
 
         System.out.println("Location choices are:");
         int index = 1;
-        for(ItemPriceRequest.LOCATION loc : ItemPriceRequest.LOCATION.values()){
+        for(LOCATION loc : LOCATION.values()){
             System.out.println(index++ + " : "+ loc);
         }
 
@@ -140,12 +151,12 @@ public class ItemPricer implements ItemRequestCallback {
             return;
         }
 
-        if(choice > ItemPriceRequest.LOCATION.values().length || choice <=0){
+        if(choice > LOCATION.values().length || choice <=0){
             System.out.println("Bad index");
             setLocation();
             return;
         }else{
-            priceRequestClass.setLocation(ItemPriceRequest.LOCATION.values()[choice-1]);
+            priceRequestClass.setLocation(LOCATION.values()[choice-1]);
         }
 
         System.out.println("Location set to "+ priceRequestClass.getLocation().getLocationString());
@@ -153,9 +164,14 @@ public class ItemPricer implements ItemRequestCallback {
     }
     private void getPrice(String itemName, int enchant){
         String id = getID(itemName);
-
-        currentWorkingItem = new Item("itemName",id,  enchant);
+        currentWorkingItem = new Item(itemName ,id,  enchant);
         priceRequestClass.sendRequest(id, enchant);
+    }
+    public void getPrice(String itemName, int enchant, PriceCallback callback){
+        this.callback = callback;
+        this.getPrice(itemName, enchant);
+
+
     }
     private String getID(String itemName){
 
@@ -168,8 +184,6 @@ public class ItemPricer implements ItemRequestCallback {
         for(int i = 0; i < items.length(); i++){
             JSONObject item = items.getJSONObject(i);
 
-            currentWorkingItem = new Item("Item");
-
             currentWorkingItem.setSell(item.getInt(SELL_KEY));
             currentWorkingItem.setBuy(item.getInt(BUY_KEY));
 
@@ -178,7 +192,7 @@ public class ItemPricer implements ItemRequestCallback {
 
             currentWorkingItem.setLocation(item.getString(LOCATION_KEY));
 
-            currentWorkingItem.setQuality(Item.QUALITY.findQuality(item.getInt(QUALITY_KEY)));
+            currentWorkingItem.setQuality(QUALITY.findQuality(item.getInt(QUALITY_KEY)));
 
             itemList.add(currentWorkingItem);
 
@@ -189,6 +203,10 @@ public class ItemPricer implements ItemRequestCallback {
 
 
     private void displayData(){
+        //Sending data to the caller class if it was done via it.
+        if(callback != null){
+            callback.priceResponse(itemList);
+        }
         for(Item i : itemList){
             System.out.println(i.getBasicData());
         }

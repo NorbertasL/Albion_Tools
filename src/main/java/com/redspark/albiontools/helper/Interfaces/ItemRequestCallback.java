@@ -1,4 +1,4 @@
-package com.redspark.albiontools.helper;
+package com.redspark.albiontools.helper.Interfaces;
 
 /**
  * Callback interface for ItemPriceRequest class
@@ -7,3 +7,5 @@ package com.redspark.albiontools.helper;
 public interface ItemRequestCallback {
     String jsonResponse(String json);
 }
+
+

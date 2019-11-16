@@ -1,5 +1,6 @@
 package com.redspark.albiontools;
 
+import com.redspark.albiontools.farmer.FarmerTool;
 import com.redspark.albiontools.helper.IdReader;
 import com.redspark.albiontools.pricer.ItemPricer;
 
@@ -73,8 +74,7 @@ public class AlbionTools {
                         break;
 
                     case "2":
-
-                        //TODO
+                        new FarmerTool(bufferedReader);
                         //new FarmerTool(scanner);
                         break;
                     default:

@@ -7,7 +7,7 @@ import java.net.http.HttpResponse;
 
 import com.redspark.albiontools.Constants.LOCATION;
 import com.redspark.albiontools.Constants.QUALITY;
-
+import com.redspark.albiontools.helper.Interfaces.ItemRequestCallback;
 
 
 /**

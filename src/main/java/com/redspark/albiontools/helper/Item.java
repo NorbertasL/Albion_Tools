@@ -10,6 +10,7 @@ import com.redspark.albiontools.Constants.QUALITY;
  * Class that encapsulates item data including market data
  */
 
+@SuppressWarnings("unused")
 public class Item {
 
     private String name, id, location;
@@ -102,8 +103,8 @@ public class Item {
 
     public String getBasicData() {
         String s = "";
-        //s+=name;
-        s += "Q:" + quality.toString();
+        s+=name;
+        s += " Q:" + quality.toString();
         s += " E:" + enchant;
         s += " Sell:" + sell;
         s += " Updated " + lastSellUpdate + " min ago, ";
