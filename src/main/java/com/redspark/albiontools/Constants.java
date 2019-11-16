@@ -61,10 +61,10 @@ public class Constants {
     @SuppressWarnings("unused")
     public enum CROP{
         Carrot("Carrots", "Carrot Seeds"),
-        Bean("Beans", "Bean Seed"),
+        Bean("Beans", "Bean Seeds"),
         Wheat("Sheaf of Wheat", "Wheat Seeds"),
-        Turnip("Turnips", "Turnip Seed"),
-        Cabbage("Cabbage", "Cabbage Seed"),
+        Turnip("Turnips", "Turnip Seeds"),
+        Cabbage("Cabbage", "Cabbage Seeds"),
         Potato("Potatoes", "Potato Seeds"),
         Corn("Bundle of Corn", "Corn Seeds"),
         Pumpkin("Pumpkin", "Pumpkin Seeds");
