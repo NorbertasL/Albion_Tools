@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -82,7 +81,7 @@ public class ItemPricer implements ItemRequestCallback {
                         break;
 
                     case "-set":
-                        String splitInput[] = input.split(" ");
+                        String[] splitInput = input.split(" ");
                         if(splitInput.length < 2){
                             System.out.println("Missing parameter");
                             break;

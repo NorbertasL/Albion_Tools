@@ -6,7 +6,6 @@ import com.redspark.albiontools.pricer.ItemPricer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 public class AlbionTools {
     private static boolean run = true;
@@ -46,8 +45,9 @@ public class AlbionTools {
 
 
             if(input.length() == 0){
+                System.out.println("You need to type a command");
 
-                //command inputs start with '-'
+            //command inputs start with '-'
             }else if(input.charAt(0)=='-'){
 
                 switch (input.split(" ")[0]){
